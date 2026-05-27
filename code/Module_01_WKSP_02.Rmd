@@ -10,6 +10,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## MB5370 Module 1: Programming Fundamentals
+
+## Workshop 1: Introduction/Foundations
+```{r}
+source("Module_01_WKSP_01.R")
+```
 ## Workshop 2: Visualization using ggplot2
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
