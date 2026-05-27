@@ -81,7 +81,7 @@ out <- p * z  # What should the value of out be?
 print (out) # What is the value of out? Is it the same as expected?
 
 # debugging errors
-out <- p * a # undefined variable.
+##out <- p * a # undefined variable.
 ## > Error: object 'a' not found
 out <- p * z
 
