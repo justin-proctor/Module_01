@@ -5,6 +5,7 @@ date: "2026-05-20"
 output: html_document
 ---
 
+#note this rmd file contains code from all workshops (1-4) in module 1 so that a knitted file of all workshops could be created.
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -254,4 +255,207 @@ ggplot(data = penguins) +
 ```
 
 
+
+## Workshop 3: Reproducible Research in MS: connecting R, Rstudio, Git, and GitHub
+
+```{r}
+#install.packages("usethis")
+```
+
+```{r}
+library(usethis)
+
+#use_git_config(user.name = "justin-proctor", user.email = "justinproctor24@gmail.com")
+#commented out to avoid overriding existing git config
+```
+
+
+
+## Workshop 4: The Developer's Toolbox and AI
+
+```{r}
+#install.packages("ellmer")
+#install.packages("chattr")
+```
+
+```{r}
+#install.packages("palmerpenguins")
+```
+
+```{r using github copilot to pull penguins package and load it}
+#load tidyverse and palmerpenguins libraries
+
+
+library(tidyverse)
+library(palmerpenguins)
+
+# Create a ggplot scatter plot using the penguins dataset. 
+# Plot bill_length_mm on the x-axis and bill_depth_mm on the y-axis.
+# Color points by species and use geom_point with size 3.
+# Add a minimal theme and clean labels.
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(title = "Penguin Bill Dimensions",
+       x = "Bill Length (mm)",
+       y = "Bill Depth (mm)",
+       color = "Species")
+
+```
+
+```{r open-ended comparative plotting using the penguins dataset}
+#please create a boxplot comparing flipper_length_mm across different species in the palmerpenguins dataset. 
+#place flipper length on the y axis and species on the x axis.
+#facet these data by island and add a minimal theme with clean labels.
+#please also use a custom color palette of your choice to differentiate the species in the boxplot.
+ggplot(penguins, aes(x = species, y = flipper_length_mm, fill = species)) +
+  geom_boxplot() +
+  facet_wrap(~ island) +
+  theme_minimal() +
+  labs(title = "Flipper Length by Species and Island",
+       x = "Species",
+       y = "Flipper Length (mm)",
+       fill = "Species") +
+  scale_fill_manual(values = c("Adelie" = "#1f77b4", "Chinstrap" = "#ff7f0e", "Gentoo" = "#2ca02c"))
+```
+
+
+
+```{r testing chattr (chatgpt) plug in by asking it to produce the following code}
+library(ggplot2)
+
+data(iris)
+
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point()
+
+```
+
+```{r conditional logic - filtering data using base R}
+# Simple Example: Checking Sea Surface Temperature (SST)
+sst <- 30.2
+
+if (sst > 29.5) {
+  print("Warning: Marine heatwave threshold exceeded!")
+} else {
+  print("SST remains within baseline parameters.")
+}
+```
+
+```{r conditional logic - filtering data using Tidyverse Alternative}
+# Load tidyverse (if not already loaded)
+library(tidyverse)
+
+# Sample coral data
+coral_monitoring <- tibble(
+  site = c("Site_A", "Site_B", "Site_C"),
+  depth_m = c(12, 35, 8)
+)
+
+# Classify depth using if_else
+coral_monitoring <- coral_monitoring %>% 
+  mutate(zone = if_else(depth_m > 30, "Deep Reef", "Shallow Reef"))
+
+```
+
+```{r conditional logic - filtering data using case_when()}
+coral_monitoring <- coral_monitoring %>% 
+  mutate(reef_category = case_when(
+    depth_m < 10  ~ "Lagoon / Flats",
+    depth_m <= 30 ~ "Crest / Slope",
+    depth_m > 30  ~ "Mesophotic / Deep",
+    TRUE          ~ "Unclassified" # Catch-all remainder
+  ))
+```
+
+```{r automation with base R}
+# Classic loop anatomy
+for (year in 2020:2024) {
+  print(paste("Processing climate data for year:", year))
+}
+```
+
+```{r}
+# Loop across index sequences
+transect_lengths <- c(50, 100, 25, 75)
+
+for (i in seq_along(transect_lengths)) {
+  print(paste("Transect number", i, "measures", transect_lengths[i], "metres."))
+}
+
+```
+
+```{r automation with tidyverse alternative - standard for-loop}
+site_areas <- c(144, 400, 625)
+results <- numeric(length(site_areas)) # Must build an empty container first
+
+for (i in seq_along(site_areas)) {
+  results[i] <- sqrt(site_areas[i])
+}
+
+results
+```
+
+```{r automation with tidyverse alternative - purrr}
+library(purrr)
+# Map directly and define your expected output type explicitly
+mapped_results <- map_dbl(site_areas, sqrt)
+
+```
+
+```{r automation with tidyverse alternative - Iterating Across Complex Groups}
+# Iterate a summary function over split lists of data
+iris %>% 
+  split(.$Species) %>% 
+  map(~summary(.x))
+
+```
+
+```{r chatr task using purrr}
+# List of vectors with fish counts
+fish_counts <- list(
+  lake1 = c(10, 12, 13, 9),
+  lake2 = c(8, 6, 7),
+  lake3 = c(14, 15, 13, 16, 15)
+)
+
+# For-loop to calculate the mean of each vector
+fish_means <- numeric(length(fish_counts))
+for (i in seq_along(fish_counts)) {
+  fish_means[i] <- mean(fish_counts[[i]])
+}
+fish_means
+```
+
+```{r Function Construction Blueprint}
+# Function Definition
+calculate_coral_mortality <- function(initial_count, surviving_count) {
+  
+  # Logic safety switch using our conditional tools!
+  if (initial_count <= 0) {
+    stop("Initial count must be greater than zero.")
+  }
+  
+  mortality_rate <- (initial_count - surviving_count) / initial_count
+  return(mortality_rate)
+}
+
+# Utilizing your custom function
+calculate_coral_mortality(initial_count = 120, surviving_count = 84)
+
+```
+
+```{r Exercise 4: Custom Function Construction Task}
+convert_temp_c_to_f <- function(celsius) {
+  if (celsius < -273.15) {
+    stop("Temperature cannot be below absolute zero (-273.15°C).")
+  }
+ 
+  fahrenheit <- (celsius * 9/5) + 32
+  return(fahrenheit)
+}
+
+# Valid test
+convert_temp_c_to_f(25)
+```
 
